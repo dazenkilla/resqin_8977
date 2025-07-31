@@ -18,7 +18,6 @@ class HomeDashboard extends StatefulWidget {
 
 class _HomeDashboardState extends State<HomeDashboard>
     with TickerProviderStateMixin {
-  late TabController _tabController;
   bool _isRefreshing = false;
   bool _hasActiveBooking = false;
 
@@ -123,7 +122,6 @@ class _HomeDashboardState extends State<HomeDashboard>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
     // Simulate active booking for demo
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
@@ -136,7 +134,6 @@ class _HomeDashboardState extends State<HomeDashboard>
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -192,7 +189,6 @@ class _HomeDashboardState extends State<HomeDashboard>
         child: Column(
           children: [
             _buildStatusBar(),
-            _buildTabBar(),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _handleRefresh,
@@ -260,7 +256,7 @@ class _HomeDashboardState extends State<HomeDashboard>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'ResQin',
+            'ambulans.co',
             style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w700,
               color: AppTheme.lightTheme.primaryColor,
@@ -288,21 +284,6 @@ class _HomeDashboardState extends State<HomeDashboard>
     );
   }
 
-  Widget _buildTabBar() {
-    return Container(
-      color: AppTheme.lightTheme.colorScheme.surface,
-      child: TabBar(
-        controller: _tabController,
-        tabs: const [
-          Tab(text: 'Home'),
-          Tab(text: 'Bookings'),
-          Tab(text: 'History'),
-          Tab(text: 'Profile'),
-        ],
-      ),
-    );
-  }
-
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
@@ -319,7 +300,7 @@ class _HomeDashboardState extends State<HomeDashboard>
             Navigator.pushNamed(context, '/booking-history');
             break;
           case 3:
-            Navigator.pushNamed(context, '/google-login-screen');
+            Navigator.pushNamed(context, '/profile-settings-screen');
             break;
         }
       },

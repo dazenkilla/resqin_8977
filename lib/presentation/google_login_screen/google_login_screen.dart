@@ -78,7 +78,7 @@ class _GoogleLoginScreenState extends State<GoogleLoginScreen> {
         ),
         SizedBox(height: 2.h),
         Text(
-          'ResQin',
+          'ambulans.co',
           style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
             color: AppTheme.lightTheme.colorScheme.primary,
             fontWeight: FontWeight.w700,
@@ -397,7 +397,7 @@ class _GoogleLoginScreenState extends State<GoogleLoginScreen> {
           ),
           SizedBox(height: 1.h),
           Text(
-            'ResQin Emergency Services © 2025',
+            'Ambulans Emergency Services © 2025',
             style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
               fontSize: 10.sp,

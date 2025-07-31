@@ -310,7 +310,8 @@ class AppTheme {
         borderRadius: BorderRadius.circular(12.0),
       ),
       elevation: 4.0,
-    ), dialogTheme: DialogThemeData(backgroundColor: dialogLight),
+    ),
+    dialogTheme: DialogThemeData(backgroundColor: dialogLight),
   );
 
   /// Dark theme optimized for emergency medical services
@@ -547,7 +548,8 @@ class AppTheme {
         borderRadius: BorderRadius.circular(12.0),
       ),
       elevation: 4.0,
-    ), dialogTheme: DialogThemeData(backgroundColor: dialogDark),
+    ),
+    dialogTheme: DialogThemeData(backgroundColor: dialogDark),
   );
 
   /// Helper method to build text theme based on brightness using Inter font family

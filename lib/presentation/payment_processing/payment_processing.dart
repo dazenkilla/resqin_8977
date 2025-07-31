@@ -68,7 +68,7 @@ class _PaymentProcessingState extends State<PaymentProcessing>
         },
       ],
       "account_number": "1234567890",
-      "account_name": "PT ResQin Indonesia",
+      "account_name": "PT Ambulans Indonesia",
       "reference": "RSQ240712001",
     },
     {
