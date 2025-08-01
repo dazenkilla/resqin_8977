@@ -3,6 +3,262 @@ import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
 
+class NotificationPreferencesSectionWidget extends StatefulWidget {
+  const NotificationPreferencesSectionWidget({super.key});
+
+  @override
+  State<NotificationPreferencesSectionWidget> createState() =>
+      _NotificationPreferencesSectionWidgetState();
+}
+
+class _NotificationPreferencesSectionWidgetState
+    extends State<NotificationPreferencesSectionWidget> {
+  bool _emergencyAlerts = true;
+  bool _bookingUpdates = true;
+  bool _promotionalMessages = false;
+  bool _driverLocation = true;
+  bool _arrivalNotifications = true;
+  bool _paymentConfirmations = true;
+
+  void _handleNotificationToggle(String type, bool value) {
+    setState(() {
+      switch (type) {
+        case 'emergency':
+          _emergencyAlerts = value;
+          break;
+        case 'booking':
+          _bookingUpdates = value;
+          break;
+        case 'promotional':
+          _promotionalMessages = value;
+          break;
+        case 'driver_location':
+          _driverLocation = value;
+          break;
+        case 'arrival':
+          _arrivalNotifications = value;
+          break;
+        case 'payment':
+          _paymentConfirmations = value;
+          break;
+      }
+    });
+    print('Notification $type toggled to $value');
+  }
+
+  /// Widget builder untuk tile notifikasi
+  Widget _buildNotificationTile({
+    required String title,
+    required String subtitle,
+    required bool value,
+    required String type,
+    required IconData icon,
+    required void Function(String, bool) onToggle,
+    bool isImportant = false,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 1.h),
+      padding: EdgeInsets.all(3.w),
+      decoration: BoxDecoration(
+        color: isImportant
+            ? AppTheme.lightTheme.primaryColor.withAlpha(13)
+            : AppTheme.lightTheme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: isImportant
+              ? AppTheme.lightTheme.primaryColor.withAlpha(77)
+              : AppTheme.lightTheme.dividerColor,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Ikon custom
+          CustomIconWidget(
+            iconName: icon.toString().split('.').last,
+            size: 24,
+            color: isImportant
+                ? AppTheme.lightTheme.primaryColor
+                : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+          ),
+          SizedBox(width: 3.w),
+
+          // Judul dan deskripsi
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: isImportant
+                        ? AppTheme.lightTheme.primaryColor
+                        : null,
+                  ),
+                ),
+                SizedBox(height: 0.5.h),
+                Text(
+                  subtitle,
+                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                    color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Tombol Switch
+          Switch(
+            value: value,
+            onChanged: (newValue) => onToggle(type, newValue),
+            activeColor: isImportant
+                ? AppTheme.lightTheme.primaryColor
+                : AppTheme.lightTheme.colorScheme.tertiary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title, String iconName) {
+    return Row(
+      children: [
+        CustomIconWidget(
+          iconName: iconName,
+          color: AppTheme.lightTheme.colorScheme.primary,
+          size: 24,
+        ),
+        SizedBox(width: 2.w),
+        Text(
+          title,
+          style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(4.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Notification Preferences',
+            style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 1.h),
+          Text(
+            'Manage your notification settings for ambulance services.',
+            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+              color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          SizedBox(height: 3.h),
+
+          // Emergency Notifications Section
+          _buildSectionHeader('Critical Notifications', 'emergency'),
+          SizedBox(height: 2.h),
+          _buildNotificationTile(
+            title: 'Emergency Alerts',
+            subtitle: 'Receive critical emergency notifications immediately',
+            value: _emergencyAlerts,
+            type: 'emergency',
+            icon: Icons.emergency,
+            isImportant: true,
+            onToggle: _handleNotificationToggle,
+          ),
+
+          SizedBox(height: 3.h),
+
+          // Service Notifications Section
+          _buildSectionHeader('Service Updates', 'notifications'),
+          SizedBox(height: 2.h),
+          _buildNotificationTile(
+            title: 'Booking Updates',
+            subtitle: 'Get notified about booking status changes',
+            value: _bookingUpdates,
+            type: 'booking',
+            icon: Icons.book_online,
+            onToggle: _handleNotificationToggle,
+          ),
+          _buildNotificationTile(
+            title: 'Driver Location',
+            subtitle: 'Receive updates about ambulance location',
+            value: _driverLocation,
+            type: 'driver_location',
+            icon: Icons.location_on,
+            onToggle: _handleNotificationToggle,
+          ),
+          _buildNotificationTile(
+            title: 'Arrival Notifications',
+            subtitle: 'Get alerted when ambulance arrives',
+            value: _arrivalNotifications,
+            type: 'arrival',
+            icon: Icons.access_time,
+            onToggle: _handleNotificationToggle,
+          ),
+          _buildNotificationTile(
+            title: 'Payment Confirmations',
+            subtitle: 'Receive payment and billing notifications',
+            value: _paymentConfirmations,
+            type: 'payment',
+            icon: Icons.payment,
+            onToggle: _handleNotificationToggle,
+          ),
+
+          SizedBox(height: 3.h),
+
+          // Marketing Notifications Section
+          _buildSectionHeader('Marketing', 'campaign'),
+          SizedBox(height: 2.h),
+          _buildNotificationTile(
+            title: 'Promotional Messages',
+            subtitle: 'Receive offers and promotional content',
+            value: _promotionalMessages,
+            type: 'promotional',
+            icon: Icons.local_offer,
+            onToggle: _handleNotificationToggle,
+          ),
+
+          SizedBox(height: 4.h),
+
+          // Save Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                // Save preferences logic here
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Notification preferences saved successfully'),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 2.h),
+              ),
+              child: Text(
+                'Save Preferences',
+                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// PISAHKAN CLASS INI DARI CLASS DI ATAS
 class ServiceDetailsWidget extends StatefulWidget {
   final Function(String, String, String) onServiceSelected;
   final VoidCallback onNext;
@@ -29,7 +285,9 @@ class _ServiceDetailsWidgetState extends State<ServiceDetailsWidget> {
   String _selectedServiceType = 'Within City';
   String _selectedAmbulanceType = 'APV';
   String _selectedPurpose = 'Emergency';
+  bool _isRoundTrip = false;
 
+  // HAPUS const dari list yang berisi objects kompleks
   final List<Map<String, dynamic>> serviceTypes = [
     {
       'type': 'Within City',
@@ -138,6 +396,13 @@ class _ServiceDetailsWidgetState extends State<ServiceDetailsWidget> {
         _selectedServiceType, _selectedAmbulanceType, _selectedPurpose);
   }
 
+  void _handleRoundTripToggle(String type, bool value) {
+    setState(() {
+      _isRoundTrip = value;
+    });
+    print('Round trip toggled to $value');
+  }
+
   double _calculateEstimatedFare() {
     final serviceType =
         serviceTypes.firstWhere((type) => type['type'] == _selectedServiceType);
@@ -161,7 +426,86 @@ class _ServiceDetailsWidgetState extends State<ServiceDetailsWidget> {
       baseFare *= 1.2;
     }
 
+    // Apply round trip multiplier
+    if (_isRoundTrip) {
+      baseFare *= 2;
+    }
+
     return baseFare;
+  }
+
+  /// Widget builder untuk tile notifikasi (digunakan untuk round trip toggle)
+  Widget _buildNotificationTile({
+    required String title,
+    required String subtitle,
+    required bool value,
+    required String type,
+    required IconData icon,
+    required void Function(String, bool) onToggle,
+    bool isImportant = false,
+  }) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 1.h),
+      padding: EdgeInsets.all(3.w),
+      decoration: BoxDecoration(
+        color: isImportant
+            ? AppTheme.lightTheme.primaryColor.withAlpha(13)
+            : AppTheme.lightTheme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: isImportant
+              ? AppTheme.lightTheme.primaryColor.withAlpha(77)
+              : AppTheme.lightTheme.dividerColor,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Ikon custom
+          CustomIconWidget(
+            iconName: icon.toString().split('.').last,
+            size: 24,
+            color: isImportant
+                ? AppTheme.lightTheme.primaryColor
+                : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+          ),
+          SizedBox(width: 3.w),
+
+          // Judul dan deskripsi
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: isImportant
+                        ? AppTheme.lightTheme.primaryColor
+                        : null,
+                  ),
+                ),
+                SizedBox(height: 0.5.h),
+                Text(
+                  subtitle,
+                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                    color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Tombol Switch
+          Switch(
+            value: value,
+            onChanged: (newValue) => onToggle(type, newValue),
+            activeColor: isImportant
+                ? AppTheme.lightTheme.primaryColor
+                : AppTheme.lightTheme.colorScheme.tertiary,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -204,6 +548,42 @@ class _ServiceDetailsWidgetState extends State<ServiceDetailsWidget> {
           _buildSectionHeader('Booking Purpose', 'assignment'),
           SizedBox(height: 2.h),
           _buildBookingPurposeSelector(),
+
+          SizedBox(height: 3.h),
+
+          // Tipe Perjalanan Card
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(4.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Text(
+                  //   'Tipe Perjalanan',
+                  //   style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                  //     fontWeight: FontWeight.w500,
+                  //     color: AppTheme.lightTheme.primaryColor,
+                  //   ),
+                  // ),
+                  SizedBox(height: 1.h),
+                  _buildNotificationTile(
+                    title: 'Perjalanan Pulang Pergi',
+                    subtitle: 'Biaya Dikenakan 2x Lipat Untuk Pengantaran Pulang Pergi',
+                    value: _isRoundTrip,
+                    type: 'round_trip',
+                    icon: Icons.swap_horiz,
+                    isImportant: true,
+                    onToggle: _handleRoundTripToggle,
+                  ),
+                ],
+              ),
+            ),
+          ),
 
           SizedBox(height: 3.h),
 
